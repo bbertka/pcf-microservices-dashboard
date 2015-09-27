@@ -1,0 +1,15 @@
+applications:
+- name: twitter-producer
+  buildpack: https://github.com/cloudfoundry/python-buildpack
+  memory: 128M
+  disk: 256M
+  stack: cflinuxfs2
+  instances: 1
+  services: [rabbitmq-service]
+  env:
+    TASK_QUEUE: twitter_queue
+    APP_KEY: your-twitter-app-key
+    APP_SECRET: your-twitter-app-secret
+    OAUTH_TOKEN: your-oauth-token
+    OAUTH_TOKEN_SECRET: your-oauth-token-secret
+    TRACK: bigdata

@@ -6,7 +6,7 @@ Setup Instructions:
 - Using Apps Manager, create a RabbitMQ service in your Org and note the name, do not bind the service
 - Update each manifest file with the name of your RabbitMQ service in the 'services' field of the file
 - Before deployment, go to apps.twitter.com an create an application to generate keys.
-- Add Twitter keys to twitter-producer.py
+- Add Twitter keys to twitter-producer/manifest.yml
 
 Deploy:
 - Choose unique names for you Producer and Consumer, note them into the cooresponding manifest files

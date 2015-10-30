@@ -1,6 +1,5 @@
 applications:
 - name: twitter-producer
-  buildpack: https://github.com/cloudfoundry/python-buildpack
   memory: 128M
   disk: 256M
   stack: cflinuxfs2

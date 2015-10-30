@@ -1,10 +1,9 @@
 applications:
 - name: twitter-consumer
-  domain: pezapp.io
   memory: 128M
   disk: 256M
   stack: cflinuxfs2
   instances: 4
-  services: [rabbitmq-bb]
+  services: [rabbitmq-service]
   env:
     TASK_QUEUE: twitter_queue

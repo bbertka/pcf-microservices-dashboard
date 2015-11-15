@@ -1,0 +1,6 @@
+requests==2.5.1
+Flask
+urlfetch
+beautifulsoup4
+redis
+redis_collections

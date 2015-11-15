@@ -1,0 +1,10 @@
+---
+applications:
+- name: dashboard
+  path: ./build/libs/demo-0.0.1-SNAPSHOT.jar
+  instances: 1
+  memory: 512M
+  env: 
+    CONSUMER_FQDN: twitter-consumer.apps.pcfninja.io
+    PROFILES_FQDN: profile-scanner.apps.pcfninja.io
+    NEWS_FQDN: news-feeder.apps.pcfninja.io

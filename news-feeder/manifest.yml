@@ -1,0 +1,8 @@
+applications:
+- name: news-feeder
+  memory: 128M
+  disk: 256M
+  stack: cflinuxfs2
+  instances: 2
+  env:
+    PRODUCER_FQDN: twitter-producer.apps.pcfninja.io

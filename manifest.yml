@@ -1,0 +1,53 @@
+applications:
+- name: twitter-producer
+  memory: 128M
+  disk: 256M
+  stack: cflinuxfs2
+  instances: 1
+  path: ./twitter-producer
+  services: [rabbitmq-service]
+  env:
+    TOPIC: bigdata
+    TASK_QUEUE: twitter_queue
+    CONSUMER_KEY: <your API key -- go to apps.twitter.com to create them>
+    CONSUMER_SECRET: <your secret key>
+    ACCESS_TOKEN: <your access token>
+    ACCESS_TOKEN_SECRET: <your access token secret>
+
+- name: twitter-consumer
+  memory: 128M
+  disk: 256M
+  stack: cflinuxfs2
+  instances: 1
+  path: ./twitter-consumer
+  services: [rabbitmq-service]
+  env:
+    TASK_QUEUE: twitter_queue
+    MAX_CHART_SIZE: 500
+    PROFILES_FQDN: profile-scanner.apps.pcfninja.io
+
+- name: profile-scanner
+  memory: 128M
+  disk: 256M
+  stack: cflinuxfs2
+  instances: 2
+  path: ./profile-scanner
+  services: [redis-service]
+
+- name: news-feeder
+  memory: 128M
+  disk: 256M
+  stack: cflinuxfs2
+  instances: 2
+  path: ./news-feeder
+  env:
+    PRODUCER_FQDN: twitter-producer.apps.pcfninja.io
+
+- name: dashboard
+  path: ./dashboard/build/libs/demo-0.0.1-SNAPSHOT.jar
+  instances: 2
+  memory: 512M
+  env: 
+    CONSUMER_FQDN: twitter-consumer.apps.pcfninja.io
+    PROFILES_FQDN: profile-scanner.apps.pcfninja.io
+    NEWS_FQDN: news-feeder.apps.pcfninja.io

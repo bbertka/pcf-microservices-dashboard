@@ -1,2 +1,5 @@
-python-cfworker
+git+git://github.com/bbertka/python-cfworker.git
 pika
+requests==2.5.1
+Flask
+textblob

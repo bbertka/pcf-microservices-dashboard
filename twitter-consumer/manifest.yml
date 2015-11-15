@@ -3,7 +3,9 @@ applications:
   memory: 128M
   disk: 256M
   stack: cflinuxfs2
-  instances: 4
+  instances: 1
   services: [rabbitmq-service]
   env:
     TASK_QUEUE: twitter_queue
+    MAX_CHART_SIZE: 500
+    PROFILES_FQDN: profile-scanner.apps.pcfninja.io

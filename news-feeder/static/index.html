@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<link rel="stylesheet" href="assets/d3/css/bootstrap.min.css">
+
+<style type="text/css">
+
+body {
+font-size: 45px;
+}
+.twitter-timeline-user-image {
+    border-radius: 4px;
+    min-width: 48px;
+}
+
+.user-homepage-link {
+    color: #028AFF;
+}
+
+.tweet-text {
+    color: black;
+    margin: 0 0 0px;
+}
+
+.container-fluid {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.table th, .table td {
+border-top: none;
+line-height: 40px;
+}
+
+a:hover{
+text-decoration: none;
+}
+
+</style>
+
+</head>
+<body>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div style="text-align: center;">
+      <p id="article"></p>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+function getArticle(){
+        console.log("Getting article...")
+        $.get("/autosearch", function(data){
+                //console.log(data);
+                var article = document.getElementById("article");
+                $("#article").empty();
+
+		var tbl = document.createElement("table");
+		tbl.className = 'table';
+		var tblBody = document.createElement("tbody");
+
+		var obj = JSON.parse(data);
+
+		var url = obj['url'];
+		var title = obj['title'];
+		var row = document.createElement("tr");
+		var cell = document.createElement("td");
+
+                var a = document.createElement("a");
+		a.className = "user-homepage-link";
+		a.appendChild(document.createTextNode(title));
+		a.setAttribute("href", url);
+                a.setAttribute("target", "_parent");
+                cell.appendChild(a);
+                row.appendChild(cell);
+                tblBody.appendChild(row);
+		tbl.appendChild(tblBody);
+		article.appendChild(tbl);
+		$("#article").fadeIn();
+        });
+}
+window.onload = function() {
+        getArticle();
+}
+setInterval(getArticle, 60000);
+</script>
+</body>
+</html>

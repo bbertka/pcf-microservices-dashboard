@@ -7,8 +7,8 @@ applications:
   services: [rabbitmq-service]
   env:
     TASK_QUEUE: twitter_queue
-    APP_KEY: your-twitter-app-key
-    APP_SECRET: your-twitter-app-secret
-    OAUTH_TOKEN: your-oauth-token
-    OAUTH_TOKEN_SECRET: your-oauth-token-secret
-    TRACK: bigdata
+    TOPIC: bigdata
+    CONSUMER_KEY: your-key
+    CONSUMER_SECRET: your-secret
+    ACCESS_TOKEN: your-token
+    ACCESS_TOKEN_SECRET: your-token-secret

@@ -1,0 +1,7 @@
+applications:
+- name: profile-scanner
+  memory: 128M
+  disk: 256M
+  stack: cflinuxfs2
+  instances: 2
+  services: [redis-service]

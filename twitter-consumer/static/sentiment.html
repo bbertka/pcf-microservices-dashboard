@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style type="text/css">
+
+.dial {
+text-align: center;
+}
+
+table td {
+    border-top: none !important;
+}
+.table th, .table td {
+    border-top: none !important;
+}
+
+</style>
+<link href="assets/d3/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="assets/knob/jquery.knob.js"></script>
+
+</head>
+
+<body>
+<script>
+            $(function($) {
+                $(".knob").knob({
+                    change : function (value) {
+                        //console.log("change : " + value);
+                    },
+                    release : function (value) {
+                        //console.log(this.$.attr('value'));
+                        console.log("release : " + value);
+                    },
+                    cancel : function () {
+                        console.log("cancel : ", this);
+                    },
+                    /*format : function (value) {
+                        return value + '%';
+                    },*/
+                    draw : function () {
+                        // "tron" case
+                        if(this.$.data('skin') == 'tron') {
+                            this.cursorExt = 0.3;
+                            var a = this.arc(this.cv)  // Arc
+                                , pa                   // Previous arc
+                                , r = 1;
+                            this.g.lineWidth = this.lineWidth;
+                            if (this.o.displayPrevious) {
+                                pa = this.arc(this.v);
+                                this.g.beginPath();
+                                this.g.strokeStyle = this.pColor;
+                                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, pa.s, pa.e, pa.d);
+                                this.g.stroke();
+                            }
+                            this.g.beginPath();
+                            this.g.strokeStyle = r ? this.o.fgColor : this.fgColor ;
+                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, a.s, a.e, a.d);
+                            this.g.stroke();
+                            this.g.lineWidth = 2;
+                            this.g.beginPath();
+                            this.g.strokeStyle = this.o.fgColor;
+                            this.g.arc( this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+                            this.g.stroke();
+                            return false;
+                        }
+                    }
+                });
+                // Example of infinite knob, iPod click wheel
+                var v, up=0,down=0,i=0
+                    ,$idir = $("div.idir")
+                    ,$ival = $("div.ival")
+                    ,incr = function() { i++; $idir.show().html("+").fadeOut(); $ival.html(i); }
+                    ,decr = function() { i--; $idir.show().html("-").fadeOut(); $ival.html(i); };
+                $("input.infinite").knob(
+                                    {
+                                    min : 0
+                                    , max : 20
+                                    , stopper : false
+                                    , change : function () {
+                                                    if(v > this.cv){
+                                                        if(up){
+                                                            decr();
+                                                            up=0;
+                                                        }else{up=1;down=0;}
+                                                    } else {
+                                                        if(v < this.cv){
+                                                            if(down){
+                                                                incr();
+                                                                down=0;
+                                                            }else{down=1;up=0;}
+                                                        }
+                                                    }
+                                                    v = this.cv;
+                                                }
+                                    });
+            });
+</script>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+     <!--  <div class="span7"> -->
+    <div class="dial">
+	<table class = "table table-condensed">
+	<tbody>
+	<tr>
+	<td><input id = "good" class="knob", data-fgcolor="#62C462", data-width="150"  data-readonly="true", value="10", data-angleOffset="-125", data-angleArc="250", readonly="readonly"></input></td>
+        <td><input id = "bad" class="knob", data-fgcolor="#EE5F5B", data-width="150"  data-readonly="true", value="10", data-angleOffset="-125", data-angleArc="250", readonly="readonly"></input></td>
+        <td><input id = "neutral" class="knob", data-fgcolor="#5BC0DE", data-width="150"  data-readonly="true", value="10", data-angleOffset="-125", data-angleArc="250", readonly="readonly"></input></td>
+	</tr>
+	<tr><td>Good</td><td>Good</td><td>Good</td></tr>
+	</tbody>
+	</table>
+    </div>
+  </div>
+</div>
+
+<script>
+function getSentiment(){
+	console.log("Getting sentiment...")
+	$.get("metrics/field-value-counters/sentiment", function(data){
+		console.log(data);
+		var obj = JSON.parse(data);
+		var counts = obj['counts']
+		console.log(counts);
+		var sum = counts['Good']+counts['Bad']+counts['Neutral'];
+    		$('#good').val( (counts['Good']/sum)*100  ).trigger('change');
+                $('#bad').val( (counts['Bad']/sum)*100  ).trigger('change');
+                $('#neutral').val( (counts['Neutral']/sum)*100  ).trigger('change');
+	});
+}
+window.onload = function() {
+	getSentiment();
+};
+setInterval(getSentiment, 5000);
+</script>
+
+</body>
+</html>

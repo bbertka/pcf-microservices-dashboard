@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<link rel="stylesheet" href="assets/d3/css/bootstrap.min.css">
+
+<style type="text/css">
+
+.twitter-timeline-user-image {
+    border-radius: 4px;
+    min-width: 48px;
+}
+
+.user-homepage-link {
+    color: #028AFF;
+}
+
+.tweet-text {
+    color: black;
+    margin: 0 0 0px;
+}
+
+.container-fluid {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+a:hover{
+text-decoration: none;
+}
+
+</style>
+
+</head>
+<body>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div style="text-align: center;">
+      <p id="profiles"></p>
+    </div>
+
+</div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+function getProfiles(){
+        console.log("Getting profiles...")
+        $.get("/metrics/profiles", function(data){
+                //console.log(data);
+                var profiles = document.getElementById("profiles");
+                $("#profiles").empty();
+
+		var tbl = document.createElement("table");
+		tbl.className = 'table table-hover';
+		var tblBody = document.createElement("tbody");
+
+		var obj = JSON.parse(data)['profiles'];
+		obj.reverse();
+		for(var i = 0; i < obj.length; i++) {
+			console.log(obj[i]);
+			var row = document.createElement("tr");
+                        var url = obj[i];
+
+			var cell = document.createElement("td");
+
+			//user name link
+                        var a = document.createElement("a");
+			a.className = "user-homepage-link";
+			a.appendChild(document.createTextNode(url));
+			a.setAttribute("href", url);
+                        a.setAttribute("target", "_parent");
+                        cell.appendChild(a);
+		
+			// add link to row
+                        row.appendChild(cell);
+
+                        tblBody.appendChild(row);
+
+		}
+		tbl.appendChild(tblBody);
+		profiles.appendChild(tbl);
+		$("#profiles").fadeIn();
+        });
+}
+window.onload = function() {
+        getProfiles();
+}
+setInterval(getProfiles, 10000);
+</script>
+</body>
+</html>

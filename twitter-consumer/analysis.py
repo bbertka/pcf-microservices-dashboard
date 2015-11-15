@@ -104,7 +104,7 @@ class piestats:
 
         def update(self, sentiment=[]):
                 # this keeps track of the size of the pie chart (grows to sys MAXINT size)
-                if len(self.sentiment_raw) >= sys.maxint:
+                if len(self.sentiment_raw) >= int( os.getenv('MAX_CHART_SIZE') ):
                         self.sentiment_raw = ['Good', 'Bad', 'Neutral']
                         self.sentiment_count = Counter()
                 else:

@@ -24,7 +24,7 @@ applications:
   env:
     TASK_QUEUE: twitter_queue
     MAX_CHART_SIZE: 500
-    PROFILES_FQDN: profile-scanner.apps.pcfninja.io
+    PROFILES_FQDN: profile-scanner.yourdomain.io
 
 - name: profile-scanner
   memory: 128M
@@ -41,13 +41,13 @@ applications:
   instances: 2
   path: ./news-feeder
   env:
-    PRODUCER_FQDN: twitter-producer.apps.pcfninja.io
+    PRODUCER_FQDN: twitter-producer.yourdomain.io
 
 - name: dashboard
   path: ./dashboard/build/libs/demo-0.0.1-SNAPSHOT.jar
   instances: 2
   memory: 512M
   env: 
-    CONSUMER_FQDN: twitter-consumer.apps.pcfninja.io
-    PROFILES_FQDN: profile-scanner.apps.pcfninja.io
-    NEWS_FQDN: news-feeder.apps.pcfninja.io
+    CONSUMER_FQDN: twitter-consumer.yourdomain.io
+    PROFILES_FQDN: profile-scanner.yourdomain.io
+    NEWS_FQDN: news-feeder.yourdomain.io

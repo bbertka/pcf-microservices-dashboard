@@ -20,13 +20,11 @@ public class DashboardController {
 	
 	@RequestMapping("/")
 	public String dashboard(Model model){
-		model.addAttribute("TIMELINE_URL", "http://"+System.getenv("CONSUMER_FQDN")+"/timeline");
-		model.addAttribute("BUBBLES_URL", "http://"+System.getenv("CONSUMER_FQDN")+"/bubbles");
-		model.addAttribute("PROFILES_URL", "http://"+System.getenv("PROFILES_FQDN")+"/profiles");
-		model.addAttribute("NEWS_URL", "http://"+System.getenv("NEWS_FQDN"));
-		model.addAttribute("NEWS_API", "http://"+System.getenv("NEWS_FQDN")+"/autosearch");
-
-		model.addAttribute("SENTIMENT_URL",  "http://"+System.getenv("CONSUMER_FQDN")+"/sentiment");
+		model.addAttribute("TIMELINE_URL", "//"+System.getenv("CONSUMER_FQDN")+"/timeline");
+		model.addAttribute("BUBBLES_URL", "//"+System.getenv("CONSUMER_FQDN")+"/bubbles");
+		model.addAttribute("PROFILES_URL", "//"+System.getenv("PROFILES_FQDN")+"/profiles");
+		model.addAttribute("NEWS_API", "//"+System.getenv("NEWS_FQDN")+"/autosearch");
+		model.addAttribute("SENTIMENT_URL", "//"+System.getenv("CONSUMER_FQDN")+"/sentiment");
 
 		return "dashboard";
 	}

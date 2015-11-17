@@ -18,7 +18,6 @@ Deploy:
 - run createservices.sh script
 - cf push
 
-NOTE: SSL is not yet supported, please access through HTTP only -- feature coming soon
 
 
 

@@ -43,10 +43,9 @@
       <div class="col-sm-6 col-md-7">
         <div class="chart-wrapper">
           <div class="chart-title">
- 			<i class="fa fa-lg fa-newspaper-o"> Headline News</i> 
+ 			<i class="fa fa-lg fa-newspaper-o"><a id='article-title' target ='_blank' href='/'> Headline News</a></i> 
  			</div>
-          <div class="chart-stage top-chart">
-            <iframe style="padding-top: 20px;" th:src="${NEWS_URL}"></iframe>
+          <div class="chart-stage top-chart" id='article'>
           </div>
           <div class="chart-notes">
             Latest headlines found on topic
@@ -120,10 +119,62 @@
   </script>
   <script th:src="@{/assets/js/keen.min.js}"></script>
   
-      <script th:src="@{/assets/js/dashboard.js}"></script>
-    
-    
-    
+  <script th:src="@{/assets/js/dashboard.js}"></script>
+      
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+var newsapi = [[${NEWS_API}]];
+
+
+//Make the link to JSON data model
+var headline =  document.getElementById("article-title");
+headline.setAttribute("href", newsapi);
+
+
+//Populate the headline article
+function getArticle(){
+    console.log("Getting article...")
+    $.get(newsapi, function(data){
+            //console.log(data);
+            var article = document.getElementById("article");
+            $("#article").empty();
+
+            var tbl = document.createElement("table");
+            tbl.className = 'table article-table';
+            var tblBody = document.createElement("tbody");
+
+            var obj = JSON.parse(data);
+
+            var url = obj['url'];
+            var title = obj['title'];
+            var row = document.createElement("tr");
+            var cell = document.createElement("td");
+
+            var a = document.createElement("a");
+            a.className = "article-link";
+            var text = document.createTextNode(title);
+            text.className = "article-text";
+            a.appendChild(text);
+            a.setAttribute("href", url);
+            a.setAttribute("target", "_parent");
+            cell.appendChild(a);
+            row.appendChild(cell);
+            tblBody.appendChild(row);
+            tbl.appendChild(tblBody);
+            article.appendChild(tbl);
+            $("#article").fadeIn();
+    });
+}
+window.onload = function() {
+    getArticle();
+}
+setInterval(getArticle, 5000);
+
+
+/*]]>*/
+</script>
+   
 
 
 

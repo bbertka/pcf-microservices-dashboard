@@ -6,6 +6,7 @@
 
 .top-chart {
 	max-height: 130px;
+	min-height: 130px;
 }
 
 
@@ -20,14 +21,7 @@ iframe {
     padding-left: 0px;
 }
 
-.clock{
-	
-	    text-align: center;
-    font-size: 50;
-    font-family: inherit;
-    color: #028AFF;
-}
-	
+
 .brand {
     margin-left: 0;
     float: left;
@@ -41,4 +35,31 @@ iframe {
 a:hover{
 	color:#979B97;
 	text-decoration: none;
+}
+
+
+.article-text  {
+font-size: 35px;
+}
+
+
+.article-link {
+    color: #4C4C4C;
+    font-family: monospace;
+    font-size: 35px;
+}
+
+.tweet-text {
+    color: black;
+    margin: 0 0 0px;
+}
+
+.container-fluid {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.article-table th, .article-table td {
+border-top: none;
+line-height: 35px;
 }

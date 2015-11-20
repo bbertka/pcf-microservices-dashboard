@@ -1,4 +1,4 @@
-# Cloud Foundry Microservices Demo - PloyGlot Version
+# Cloud Foundry Microservices Demo - Polyglot Version
 
 
 A Microservices demo with Spring Boot, Python, RabbitMQ, and Redis

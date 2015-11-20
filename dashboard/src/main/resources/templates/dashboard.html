@@ -28,11 +28,21 @@
       <div class="col-sm-6 col-md-5">
         <div class="chart-wrapper">
           <div class="chart-title">
-            <i class="fa fa-lg fa-thumbs-o-up"> Topic Sentiment</i>
+  			<i class="fa fa-lg fa-thumbs-o-up"><a id='sentiment-title' target ='_blank' href='/'> Topic Sentiment</a></i> 
           </div>
           <div class="chart-stage top-chart">
             <div id="grid-1-1">
-            <iframe th:src="${SENTIMENT_URL}"></iframe>
+            <div id="dial">
+	          <table class = "table table-condensed table-dial">
+	            <tbody>
+	              <tr>
+	              <td><input id = "good" class="knob" data-fgcolor="#62C462" data-width="150"  data-readonly="true" value="0" data-angleOffset="-125" data-angleArc="250" readonly="readonly"></input></td>
+                  <td><input id = "bad" class="knob" data-fgcolor="#EE5F5B" data-width="150"  data-readonly="true" value="0" data-angleOffset="-125" data-angleArc="250" readonly="readonly"></input></td>
+                  <td><input id = "neutral" class="knob" data-fgcolor="#5BC0DE" data-width="150"  data-readonly="true" value="0" data-angleOffset="-125" data-angleArc="250" readonly="readonly"></input></td>
+	             </tr>
+	           </tbody>
+	          </table>
+            </div>
             </div>
           </div>
           <div class="chart-notes">
@@ -57,10 +67,9 @@
       <div class="col-sm-6 col-md-3">
         <div class="chart-wrapper">
           <div class="chart-title">
-            <i class="fa fa-lg fa-users"> LinkedIn Profiles</i> 
-          </div>
-          <div class="chart-stage bottom-chart">
-            <iframe th:src="${PROFILES_URL}"></iframe>
+           <i class="fa fa-lg fa-users"><a id='profiles-title' target ='_blank' href='/'> LinkedIn Profiles</a></i> 
+           </div>
+          <div class="chart-stage bottom-chart" id="profiles">
           </div>
           <div class="chart-notes">
             LinkedIn users found on topic
@@ -70,11 +79,9 @@
       <div class="col-sm-6 col-md-4">
         <div class="chart-wrapper">
           <div class="chart-title">
-        <i class="fa fa-lg fa-twitter"> Twitter Stream</i> 
-
+             <i class="fa fa-lg fa-twitter"><a id='timeline-title' target ='_blank' href='/'> Twitter Stream</a></i> 
           </div>
-          <div class="chart-stage bottom-chart">
-            <iframe th:src="${TIMELINE_URL}"></iframe>
+          <div class="chart-stage bottom-chart" id="timeline" style="text-align: center">
           </div>
           <div class="chart-notes">
             Displaying tweets from RabbitMQ source
@@ -84,11 +91,9 @@
       <div class="col-sm-6 col-md-5">
         <div class="chart-wrapper">
           <div class="chart-title">
-                      <i class="fa fa-lg fa-slack"> Hashtag Distribution</i> 
-
+           	  <i class="fa fa-lg fa-slack"><a id='bubbles-title' target ='_blank' href='/'> Hashtag Distribution</a></i> 
           </div>
-          <div class="chart-stage bottom-chart">
-            <iframe th:src="${BUBBLES_URL}"></iframe>
+          <div class="chart-stage bottom-chart" id="bubbles" style="text-align: center; font-size: 16px;">
           </div>
           <div class="chart-notes">
             Displaying hashtags distribution from RabbitMQ source
@@ -118,24 +123,249 @@
     Holder.add_theme("white", { background:"#fff", foreground:"#a7a7a7", size:10 });
   </script>
   <script th:src="@{/assets/js/keen.min.js}"></script>
-  
   <script th:src="@{/assets/js/dashboard.js}"></script>
-      
-<script th:inline="javascript">
-/*<![CDATA[*/
+  <script th:src="@{/assets/d3/js/jquery-1.10.2.min.js}"></script>
+  <script th:src="@{/assets/d3/js/d3.v3.min.js}"></script>
+  <script th:src="@{/assets/d3/js/fvc.js}"></script>
+  <script th:src="@{/assets/d3/js/aggcount.js}"></script>
+  <script th:src="@{/assets/d3/js/bootstrap.js}"></script>
+  <script th:src="@{/assets/knob/jquery.knob.js}" type="text/javascript" ></script>
+  <script th:src="@{/assets/knob/mapknob.js}" type="text/javascript" ></script>
+  
+  
+ <script th:inline="javascript">
+ /*<![CDATA[*/
 
+
+            
+var sentimentapi = [[${SENTIMENT_API}]];
+
+//Make the link to JSON data model
+var sentiment =  document.getElementById("sentiment-title");
+sentiment.setAttribute("href", sentimentapi); 
+
+
+function getSentiment(){
+	//console.log("Getting sentiment...")
+
+	$.get(sentimentapi, function(data){
+		//console.log(data);
+		var obj = JSON.parse(data);
+		var counts = obj['counts']
+		//console.log(counts);
+		var sum = counts['Good']+counts['Bad']+counts['Neutral'];
+    		$('#good').val( (counts['Good']/sum)*100  ).trigger('change');
+                $('#bad').val( (counts['Bad']/sum)*100  ).trigger('change');
+                $('#neutral').val( (counts['Neutral']/sum)*100  ).trigger('change');
+	});
+	
+}
+window.onload = function() {
+	getSentiment();
+};
+setInterval(getSentiment, 2000);
+/*]]>*/
+</script>
+      
+ 
+ <script th:inline="javascript">
+/*
+* PROFILES LIST
+*/
+
+/*<![CDATA[*/
+var profilesapi = [[${PROFILES_API}]];
+
+//Make the link to JSON data model
+var profiles =  document.getElementById("profiles-title");
+profiles.setAttribute("href", profilesapi); 
+ 
+function getProfiles(){
+    //console.log("Getting profiles...")
+    $.get(profilesapi, function(data){
+            //console.log(data);
+            var profiles = document.getElementById("profiles");
+            $("#profiles").empty();
+
+	var tbl = document.createElement("table");
+	tbl.className = 'table table-hover';
+	var tblBody = document.createElement("tbody");
+
+	var obj = JSON.parse(data)['profiles'];
+	obj.reverse();
+	for(var i = 0; i < obj.length; i++) {
+		//console.log(obj[i]);
+		var row = document.createElement("tr");
+                    var url = obj[i];
+
+		var cell = document.createElement("td");
+
+		//user name link
+                    var a = document.createElement("a");
+		a.className = "user-homepage-link";
+		a.appendChild(document.createTextNode(url));
+		a.setAttribute("href", url);
+                    a.setAttribute("target", "_parent");
+                    cell.appendChild(a);
+	
+		// add link to row
+                    row.appendChild(cell);
+
+                    tblBody.appendChild(row);
+
+	}
+	tbl.appendChild(tblBody);
+	profiles.appendChild(tbl);
+	$("#profiles").fadeIn();
+    });
+}
+window.onload = function() {
+    getProfiles();
+}
+setInterval(getProfiles, 2000);
+
+  /*]]>*/
+</script>
+
+<script th:inline="javascript">
+/*
+* TWITTER TIMELINE
+*/
+
+/*<![CDATA[*/
+var timelineapi = [[${TIMELINE_API}]];
+
+//Make the link to JSON data model
+var timeline =  document.getElementById("timeline-title");
+timeline.setAttribute("href", timelineapi);
+
+function getTimeline(){
+        //console.log("Getting timeline...")
+        $.get(timelineapi, function(data){
+        //console.log(data);
+        var timeline = document.getElementById("timeline");
+        $("#timeline").empty();
+
+		var tbl = document.createElement("table");
+		tbl.className = 'table table-hover';
+		var tblBody = document.createElement("tbody");
+
+		var obj = JSON.parse(data)["timeline"];
+		obj.reverse();
+		for(var i = 0; i < obj.length; i++) {
+			//console.log(obj[i]);
+			var row = document.createElement("tr");
+			var homepage = obj[i]['homepage'];
+            var text = obj[i]['text'];
+            var url = obj[i]['url'];
+            var user = obj[i]['user'];
+            var image = obj[i]['user_image'];
+
+			var cell = document.createElement("td");
+			var a = document.createElement("img");
+			a.className = "twitter-timeline-user-image";
+			a.setAttribute("src", image);
+            a.setAttribute("target", "_parent");
+			cell.appendChild(a);
+			row.appendChild(cell);
+
+			//tweet main
+            var cell = document.createElement("td");
+			var div = document.createElement("div");
+
+			//user name link
+            var a = document.createElement("a");
+			a.className = "user-homepage-link";
+			a.appendChild(document.createTextNode(user));
+			a.setAttribute("title", user);
+			a.setAttribute("href", homepage);
+            a.setAttribute("target", "_parent");
+            div.appendChild(a);
+
+			//tweet text
+			var p = document.createElement("p");
+			p.className = "tweet-text";
+	        p.appendChild(document.createTextNode(text));
+			div.appendChild(p);
+
+			//url in tweet
+            var a = document.createElement("a");
+            a.className = "user-homepage-link";
+            a.appendChild(document.createTextNode(url));
+            a.setAttribute("href", url);
+            a.setAttribute("target", "_parent");
+            div.appendChild(a);
+		
+			// add main tweet to row
+			cell.appendChild(div);
+            row.appendChild(cell);
+
+            tblBody.appendChild(row);
+
+		}
+		tbl.appendChild(tblBody);
+		timeline.appendChild(tbl);
+		$("#timeline").fadeIn();
+        });
+}
+window.onload = function() {
+        getTimeline();
+}
+setInterval(getTimeline, 2000);
+/*]]>*/
+</script>
+
+
+  
+<script th:inline="javascript">
+/*
+* HASHTAG BUBBLES
+*/
+
+/*<![CDATA[*/
+var bubblesapi = [[${BUBBLES_API}]];
+var bubbles_title =  document.getElementById("bubbles-title");
+bubbles_title.setAttribute("href", bubblesapi);
+
+var bubblechart = fvcBubbleChart().diameter(415);
+function drawBubbles() {
+	d3.json(bubblesapi)
+	.get(function(error, json) {
+		if( error ){ 
+			return console.warn(error); 
+		}
+		var data = d3.entries(json.counts);
+		data.sort(function(a,b) { 
+			return b.value - a.value; 
+		});
+    		data.splice(500);
+    		d3.select("#bubbles")
+			.datum(data)
+			.call(bubblechart);
+	});
+}
+drawBubbles.call();
+setInterval(drawBubbles, 2000);
+/*]]>*/
+</script>
+
+  
+<script th:inline="javascript">
+/*
+* NEWS FEED
+*/
+
+/*<![CDATA[*/
 var newsapi = [[${NEWS_API}]];
 
 //Make the link to JSON data model
 var headline =  document.getElementById("article-title");
 headline.setAttribute("href", newsapi);
 
-
 //Populate the headline article
 function getArticle(){
-    console.log("Getting article...")
+    //console.log("Getting article...")
     $.get(newsapi, function(data){
-            //console.log(data);
             var article = document.getElementById("article");
             $("#article").empty();
 
@@ -168,15 +398,12 @@ function getArticle(){
 window.onload = function() {
     getArticle();
 }
-setInterval(getArticle, 5000);
-
-
+setInterval(getArticle, 2000);
 /*]]>*/
 </script>
-   
+
 
 
 
 </body>
-   
 </html>

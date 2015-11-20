@@ -2,6 +2,8 @@
 
 .bottom-chart {
 	min-height: 415px;
+	overflow-y: scroll;
+	max-height: 415px;
 }
 
 .top-chart {
@@ -46,13 +48,10 @@ font-size: 35px;
 .article-link {
     color: #4C4C4C;
     font-family: monospace;
-    font-size: 35px;
+    font-size: 24px;
 }
 
-.tweet-text {
-    color: black;
-    margin: 0 0 0px;
-}
+
 
 .container-fluid {
     padding-right: 0px;
@@ -61,5 +60,51 @@ font-size: 35px;
 
 .article-table th, .article-table td {
 border-top: none;
-line-height: 35px;
+line-height: 30px;
+}
+
+
+
+
+.dial {
+text-align: center;
+}
+
+table-dial td {
+    border-top: none !important;
+}
+.table-dial th, .table td {
+    border-top: none !important;
+}
+
+.twitter-timeline-user-image {
+    border-radius: 4px;
+    min-width: 48px;
+}
+
+.user-homepage-link {
+    color: #028AFF;
+    font-size: 16px;
+}
+
+.tweet-text {
+    color: black;
+    margin: 0 0 0px;
+    font-size: 14px;
+}
+
+.container-fluid {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+
+a:hover{
+text-decoration: none;
+}
+
+
+.bubbles {
+	
+    font-size: 16;
 }

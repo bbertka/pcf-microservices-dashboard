@@ -16,12 +16,21 @@ def computeSentiment(data):
 
 def sendToBubbles(data):
         try:
-                hashtags = [ tag['text'].encode('utf-8').lower() for tag in data['entities']['hashtags'] ]
+                hashtags = [ ( "#%s" % tag['text'].encode('utf-8').lower() ) for tag in data['entities']['hashtags'] ]
                 if hashtags:
                         r = requests.post(url='http://0.0.0.0:%d/bubbles/post' % int(os.getenv('PORT')),
                                 data=json.dumps({'trends': hashtags }), headers={'Content-Type': 'application/json'})
         except Exception as e:
                 print 'Analysis error, found a problem parsing hashtag list: %s' % e
+
+        try:
+                mentions = [ ( "@%s" % tag['screen_name'].encode('utf-8').lower() ) for tag in data['entities']['user_mentions'] ]
+                if mentions:
+                        r = requests.post(url='http://0.0.0.0:%d/bubbles/post' % int(os.getenv('PORT')),
+                                data=json.dumps({'trends': mentions }), headers={'Content-Type': 'application/json'})
+        except Exception as e:
+                print 'Analysis error, found a problem parsing user_mentions list: %s' % e
+
 
 def sendToPie(data):
         try:
@@ -46,7 +55,7 @@ def sendToTimeline(data):
 			if data['retweeted_status']['entities']['urls']:
 				url = data['retweeted_status']['entities']['urls'][0]['url']
 		homepage = 'https://twitter.com/%s' % user.split('@')[1]
-		tweet = {'user': user, 'homepage': homepage, 'text': text, 'url':url, 'user_image': image}
+		tweet = {'user': user, 'homepage': homepage, 'text': text, 'url':url, 'user_image': image.replace("http:", "https:") }
 		r = requests.post(url='http://0.0.0.0:%d/timeline/post' % int(os.getenv('PORT')), 
 			data=json.dumps({'tweet': tweet }), headers={'Content-Type': 'application/json'})
 	except Exception as e:
